@@ -41,7 +41,9 @@ function MarcaGoogle() {
 /**
  * Só avaliações reais do Google (content/reviews.json). À esquerda o resumo
  * com a nota real do perfil (4,7, nunca arredondada), à direita o trilho
- * com os depoimentos. Estado vazio se o arquivo estiver vazio.
+ * com os depoimentos: primeiro as três com texto, depois as de 5 estrelas
+ * que no Google são só nota (o cartão diz isso, sem inventar comentário).
+ * Estado vazio se o arquivo estiver vazio.
  */
 export function Depoimentos() {
   const lista = reviews as Review[];
@@ -75,7 +77,7 @@ export function Depoimentos() {
                   <li key={r.autor + r.data} className="w-[82vw] max-w-[22rem] shrink-0 snap-start sm:w-[22rem]">
                     <figure className="cartao flex h-full flex-col p-7">
                       <figcaption className="flex items-center gap-3.5">
-                        <Image quality={90} src={asset(r.foto)} alt={`Foto de perfil de ${r.autor} no Google`} width={48} height={48} unoptimized className="size-12 shrink-0 rounded-full object-cover ring-2 ring-surface shadow-[0_6px_16px_-8px_rgb(43_31_23/0.5)]" />
+                        <Image quality={90} src={asset(r.foto)} alt={`Foto de perfil de ${r.autor} no Google`} width={48} height={48} unoptimized className="size-12 shrink-0 rounded-full bg-surface-warm object-cover ring-2 ring-surface shadow-[0_6px_16px_-8px_rgb(43_31_23/0.5)]" />
                         <span className="min-w-0 flex-1">
                           <span className="block truncate font-semibold text-ink">{r.autor}</span>
                           <time dateTime={r.data} className="rotulo-caps mt-0.5 block text-[0.58rem] text-muted">
@@ -84,9 +86,14 @@ export function Depoimentos() {
                         </span>
                       </figcaption>
                       <StarRating nota={r.nota} className="mt-5 size-4" />
-                      <blockquote className="mt-3 flex-1 text-[0.98rem] text-ink/85">
-                        <p>{r.texto}</p>
-                      </blockquote>
+                      {r.texto ? (
+                        <blockquote className="mt-3 flex-1 text-[0.98rem] text-ink/85">
+                          <p>{r.texto}</p>
+                        </blockquote>
+                      ) : (
+                        /* No Google a avaliação é só a nota: nada de texto inventado. */
+                        <p className="mt-3 flex-1 text-[0.95rem] text-muted">Avaliou com {r.nota} estrelas, sem comentário escrito.</p>
+                      )}
                       <p className="rotulo-caps mt-5 text-[0.56rem] text-muted">Avaliação no Google</p>
                     </figure>
                   </li>

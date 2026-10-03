@@ -25,7 +25,7 @@ visitante (o `semMarcador` tira todos do texto exibido e do JSON-LD).
 ## Avaliações do Google
 
 - O perfil tem **4,7 com 15 avaliações**. O site usa exatamente isso, nunca "5,0".
-- Entraram só três avaliações com texto e cinco estrelas: Amanda Ouriques, Ananda Sukhi Galheigo e Heitor Barrozo (dados brutos em `midia/google/avaliacoes-2026-10-03.json`).
+- O site mostra **8 avaliações de 5 estrelas**: as três com texto (Amanda Ouriques, Ananda Sukhi Galheigo e Heitor Barrozo) e cinco que no Google são só nota, sem comentário (Arte na veia. Leila e Fabiano, Jaqueline Oliveira, Tais Souza Gomes, Leandro Damaceno e Oscar Sant' Anna). O cartão dessas cinco diz "sem comentário escrito": nenhum texto foi inventado. Ficaram de fora as de sobrenome Siqueira (Maicon, Lorrane, Viviane), o perfil "economize dinheiro" e dois perfis sem foto (Caroline Neves, rafael soares santos).
 - **Maicon Siqueira** ficou de fora: tem o mesmo sobrenome da marcenaria. Doze das quinze avaliações foram publicadas entre 27 e 28/04/2021, em menos de duas horas, e três autores se chamam Siqueira. Uma avaliação de família exibida no site pode pesar contra se alguém notar.
 - A única avaliação recente com texto (2024) tem 1 estrela: "não entregou orçamento e não responde". Vale o cliente responder no Google.
 - As fotos dos autores vêm do perfil de cada um no Google (baixadas em `public/avaliacoes/`). Heitor Barrozo não tem foto no perfil: aparece o avatar com a inicial, o mesmo que o Google mostra.
