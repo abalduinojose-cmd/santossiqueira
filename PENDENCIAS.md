@@ -28,7 +28,7 @@ visitante (o `semMarcador` tira todos do texto exibido e do JSON-LD).
 - Entraram só três avaliações com texto e cinco estrelas: Amanda Ouriques, Ananda Sukhi Galheigo e Heitor Barrozo (dados brutos em `midia/google/avaliacoes-2026-10-03.json`).
 - **Maicon Siqueira** ficou de fora: tem o mesmo sobrenome da marcenaria. Doze das quinze avaliações foram publicadas entre 27 e 28/04/2021, em menos de duas horas, e três autores se chamam Siqueira. Uma avaliação de família exibida no site pode pesar contra se alguém notar.
 - A única avaliação recente com texto (2024) tem 1 estrela: "não entregou orçamento e não responde". Vale o cliente responder no Google.
-- O Google não devolveu foto de nenhum autor, por isso os cartões usam as iniciais.
+- As fotos dos autores vêm do perfil de cada um no Google (baixadas em `public/avaliacoes/`). Heitor Barrozo não tem foto no perfil: aparece o avatar com a inicial, o mesmo que o Google mostra.
 
 ## Formulário
 
@@ -37,11 +37,11 @@ visitante (o `semMarcador` tira todos do texto exibido e do JSON-LD).
 
 ## Publicação
 
-- O nome do repositório ainda não foi definido (`REPO` em `next.config.ts`, hoje `santossiqueira`).
-- `npm run build:pages` gera `docs/`. A exportação foi conferida servindo em `/santossiqueira/`: sem nenhum 404 e com o formulário abrindo o WhatsApp.
+- Prévia no ar: **https://abalduinojose-cmd.github.io/santossiqueira/** (repositório `abalduinojose-cmd/santossiqueira`, público, Pages servindo `main` + `/docs`).
+- Para atualizar: `npm run build:pages`, commit e push. `material/verificar-estatico.mjs` confere a exportação em `/santossiqueira/` antes do push (404, imagens, vídeo certo em cada largura).
+- Os vídeos do hero são de IA e foram enviados pelo próprio Anderson: o vertical vai para o celular, o horizontal para o desktop (sem o 1,5 s inicial, que tinha tarja preta).
 
 ## Números medidos (03/10/2026, build de produção, Lighthouse mobile)
 
-- Acessibilidade, boas práticas e SEO: **100**. CLS **0** (a Martian Mono tem um fallback calibrado na mesma largura de caractere).
-- Performance: **79 a 88** entre rodadas na mesma máquina, com LCP de 2,7 a 4,0 s. A meta de 95 do briefing não foi alcançada.
+- Performance **93**, LCP 1,8 s. Acessibilidade, boas práticas e SEO **100**. CLS **0**.
 - JavaScript da página: **122 kB** no primeiro carregamento. A meta de 90 kB não é alcançável no Next 15: só o código-base que ele carrega em toda página já soma 103 kB.
