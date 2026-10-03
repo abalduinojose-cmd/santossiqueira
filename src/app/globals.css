@@ -1,0 +1,558 @@
+@import "tailwindcss";
+
+/* --------------------------------------------------------------------------
+   Santos Siqueira Marcenaria · Tokens
+   Estrutura no ritmo do Cabana Afrodite (foto inteira, faixas escuras,
+   pílulas, trilhos, divisor desenhado entre seções, pílula fixa), com a
+   assinatura própria da oficina: marrom madeira, UM acento laranja, o
+   encaixe rabo de andorinha como divisor e a régua no destaque do título.
+
+   Sem laranja (pedido de 03/10): o acento é um tom de madeira. No claro
+   ele é só traço, ponto, ícone e borda (3,5:1); texto pequeno no claro usa
+   accent-texto, o próprio marrom da marca (8,6:1). Na noite, madeira 8,5:1.
+   Botão primário é brand + branco (6,2:1 no topo do degradê).
+   -------------------------------------------------------------------------- */
+@theme {
+  --color-brand: #614631;
+  --color-brand-quente: #7b5a3f;
+  --color-brand-700: #4a3425;
+  --color-madeira: #d6ab7c;
+  /* Madeira clara: rótulo pequeno sobre o marrom da régua (5,5:1). */
+  --color-madeira-clara: #e9c9a3;
+  --color-accent: #a87a4f;
+  --color-accent-texto: #614631;
+  --color-star: #ffd400;
+
+  --color-surface: #ffffff;
+  --color-surface-soft: #faf7f2;
+  --color-surface-warm: #ede6dd;
+  --color-noite: #1e1610;
+  --color-noite-soft: #2b2018;
+
+  --color-ink: #2b1f17;
+  --color-muted: #7a6b5e;
+  --color-line: #e2d8cd;
+  /* Texto de apoio sobre o escuro. */
+  --color-creme: #f3ece3;
+
+  --font-display: var(--font-schibsted), "Schibsted Grotesk", system-ui, sans-serif;
+  --font-body: var(--font-schibsted), "Schibsted Grotesk", system-ui, sans-serif;
+  --font-mono: var(--font-martian), "Martian Mono", ui-monospace, monospace;
+
+  --ease-oficina: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Fallback da Martian Mono com a mesma largura de caractere: Martian tem
+   avanço de 0,70em e Courier New (e as métricas-compatíveis Liberation Mono
+   e Cousine) 0,60em, então size-adjust 116,67%. Os overrides vêm divididos
+   pelo mesmo fator. Na troca de fonte, nenhuma linha muda de largura. */
+@font-face {
+  font-family: "Martian Fallback";
+  src: local("Courier New"), local("Liberation Mono"), local("Cousine");
+  size-adjust: 116.67%;
+  ascent-override: 85.71%;
+  descent-override: 17.14%;
+  line-gap-override: 0%;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background: var(--color-surface-soft);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-size: 1.0625rem;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    letter-spacing: -0.035em;
+    line-height: 1.02;
+    text-wrap: balance;
+  }
+  h3 {
+    letter-spacing: -0.02em;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+  .no-escuro :focus-visible {
+    outline-color: var(--color-madeira);
+  }
+  ::selection {
+    background: var(--color-brand);
+    color: var(--color-surface);
+  }
+  /* Da seção de avaliações para baixo o navegador pula o layout até a seção
+     chegar perto da tela: o primeiro layout da página inteira atrasava a
+     pintura do hero no celular. Só daqui para baixo de propósito: com as
+     seções de cima puladas, o axe (Lighthouse) mede os links das avaliações
+     antes de a página assentar e os acusa de "cobertos". */
+  #depoimentos ~ section {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 900px;
+  }
+  nextjs-portal {
+    display: none;
+  }
+}
+
+@utility container-page {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 80rem;
+  padding-inline: clamp(1.25rem, 5vw, 3.5rem);
+}
+
+/* Alinha o início dos trilhos à coluna do container e sangra à direita. */
+@utility trilho-recuo {
+  --recuo: clamp(1.25rem, 5vw, 3.5rem);
+  padding-inline: max(var(--recuo), calc((100% - 80rem) / 2 + var(--recuo)));
+  scroll-padding-inline: max(var(--recuo), calc((100% - 80rem) / 2 + var(--recuo)));
+}
+
+/* Rótulo de cota: mono fino em caixa alta. É a "voz da medida" do site,
+   em eyebrows, selos, legendas e números pequenos. */
+@utility rotulo-caps {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* Papel milimetrado: a malha de 8 e 40px da prancha de desenho, apagando
+   nas bordas. Fundo das seções claras, em vez de cor chapada. */
+@utility papel {
+  background-image:
+    linear-gradient(rgb(97 70 49 / 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(97 70 49 / 0.07) 1px, transparent 1px),
+    linear-gradient(rgb(97 70 49 / 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(97 70 49 / 0.035) 1px, transparent 1px);
+  background-size:
+    40px 40px,
+    40px 40px,
+    8px 8px,
+    8px 8px;
+  background-position: center top;
+}
+
+@utility scrollbar-none {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Pontes: a cor da seção vizinha vaza sobre a foto inteira e some, então o
+   corte entre as seções deixa de existir. */
+@utility ponte-topo-claro {
+  background-image: linear-gradient(to bottom, var(--color-surface-soft), transparent);
+}
+@utility ponte-topo-branco {
+  background-image: linear-gradient(to bottom, var(--color-surface), transparent);
+}
+@utility ponte-base-noite {
+  background-image: linear-gradient(to top, var(--color-noite), transparent);
+}
+@utility ponte-base-branco {
+  background-image: linear-gradient(to top, var(--color-surface), transparent);
+}
+
+@layer components {
+  /* ---- Pílulas ---------------------------------------------------------- */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.65rem;
+    border-radius: 999px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    transition:
+      transform 0.35s var(--ease-oficina),
+      box-shadow 0.35s ease,
+      filter 0.3s ease,
+      background-color 0.3s ease,
+      border-color 0.3s ease,
+      color 0.3s ease;
+  }
+  .btn:active {
+    transform: scale(0.97);
+  }
+  /* Primário: degradê de madeira com brilho interno. */
+  .btn-madeira {
+    background: linear-gradient(115deg, var(--color-brand-quente) 0%, var(--color-brand) 55%, var(--color-brand-700) 100%);
+    color: var(--color-surface);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.22),
+      0 14px 30px -12px rgb(74 52 37 / 0.6);
+  }
+  .btn-madeira:hover {
+    filter: brightness(1.08);
+    transform: translateY(-2px);
+  }
+  .btn-claro {
+    background: var(--color-surface);
+    color: var(--color-brand-700);
+    box-shadow: 0 14px 30px -14px rgb(0 0 0 / 0.45);
+  }
+  .btn-claro:hover {
+    background: var(--color-surface-soft);
+    transform: translateY(-2px);
+  }
+  .btn-contorno-claro {
+    border: 1px solid rgb(255 255 255 / 0.55);
+    color: var(--color-surface);
+  }
+  .btn-contorno-claro:hover {
+    background: var(--color-surface);
+    border-color: var(--color-surface);
+    color: var(--color-ink);
+  }
+  .btn-contorno-escuro {
+    border: 1px solid rgb(43 31 23 / 0.3);
+    color: var(--color-ink);
+  }
+  .btn-contorno-escuro:hover {
+    background: var(--color-ink);
+    border-color: var(--color-ink);
+    color: var(--color-surface-soft);
+  }
+  .btn-discreto {
+    border: 1px solid rgb(255 255 255 / 0.22);
+    background: rgb(255 255 255 / 0.1);
+    color: rgb(255 255 255 / 0.92);
+    font-weight: 500;
+  }
+  .btn-discreto:hover {
+    background: rgb(255 255 255 / 0.18);
+    border-color: rgb(255 255 255 / 0.4);
+  }
+  /* Seta em círculo dentro da pílula. */
+  .btn-seta {
+    display: inline-flex;
+    height: 2.1rem;
+    width: 2.1rem;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.18);
+    transition: transform 0.35s var(--ease-oficina);
+  }
+  .btn-claro .btn-seta {
+    background: linear-gradient(115deg, var(--color-brand-quente) 0%, var(--color-brand) 55%, var(--color-brand-700) 100%);
+    color: var(--color-surface);
+  }
+  .btn:hover .btn-seta {
+    transform: translateX(3px);
+  }
+
+  /* Link de texto com seta que anda no hover. */
+  .link-seta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 600;
+    color: var(--color-brand);
+    text-decoration: underline;
+    text-decoration-color: var(--color-accent);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 6px;
+  }
+  .link-seta svg {
+    color: var(--color-accent);
+    transition: transform 0.25s var(--ease-oficina);
+  }
+  .link-seta:hover svg {
+    transform: translateX(4px);
+  }
+
+  /* ---- Cartões ---------------------------------------------------------- */
+  .cartao {
+    background: linear-gradient(180deg, var(--color-surface) 0%, #f8f3ec 100%);
+    border: 1px solid rgb(43 31 23 / 0.08);
+    border-radius: 1.25rem;
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.9),
+      0 12px 30px -20px rgb(43 31 23 / 0.35);
+  }
+  .cartao-vivo {
+    transition:
+      transform 0.35s var(--ease-oficina),
+      box-shadow 0.35s var(--ease-oficina),
+      border-color 0.35s ease;
+  }
+  .cartao-vivo:hover {
+    transform: translateY(-4px);
+    border-color: rgb(123 90 63 / 0.45);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.9),
+      0 24px 44px -22px rgb(43 31 23 / 0.4);
+  }
+
+  /* Setas dos trilhos. */
+  .seta-trilho {
+    display: inline-flex;
+    height: 2.75rem;
+    width: 2.75rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    border: 1px solid rgb(43 31 23 / 0.16);
+    background: rgb(255 255 255 / 0.7);
+    color: var(--color-ink);
+    cursor: pointer;
+    transition:
+      background-color 0.3s ease,
+      border-color 0.3s ease,
+      color 0.3s ease,
+      opacity 0.3s ease;
+  }
+  .seta-trilho:hover:not(:disabled) {
+    background: var(--color-brand);
+    border-color: var(--color-brand);
+    color: var(--color-surface);
+  }
+  .seta-trilho:disabled {
+    opacity: 0.3;
+    cursor: default;
+  }
+
+  /* ---- Véus sobre foto -------------------------------------------------- */
+  .veu-hero {
+    background: linear-gradient(180deg, rgb(20 14 10 / 0.5) 0%, rgb(20 14 10 / 0.12) 34%, rgb(20 14 10 / 0.55) 62%, rgb(20 14 10 / 0.9) 100%);
+  }
+  .veu-foto {
+    background: linear-gradient(180deg, rgb(20 14 10 / 0.25) 0%, rgb(20 14 10 / 0.1) 34%, rgb(20 14 10 / 0.6) 70%, rgb(20 14 10 / 0.88) 100%);
+  }
+
+  /* ---- Destaque do título ----------------------------------------------
+     O trecho em destaque troca de voz: mono de traço fino no meio do título
+     em 900. Contraste de extremos, sem cor nenhuma. */
+  .destaque-mono {
+    font-family: var(--font-mono);
+    font-size: 0.8em;
+    font-weight: 200;
+    letter-spacing: -0.07em;
+    white-space: nowrap;
+    margin-inline: 0.04em 0.18em;
+  }
+
+  /* ---- Cabeçalho -------------------------------------------------------
+     Transparente sobre o hero, creme sólido depois de rolar (flag
+     data-rolou do <html>, sem JS de componente). O fundo mora no ::before:
+     backdrop-filter no próprio header prenderia o menu mobile dentro dele. */
+  .cabecalho::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: rgb(250 247 242 / 0.94);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgb(43 31 23 / 0.08);
+    box-shadow: 0 12px 30px -26px rgb(43 31 23 / 0.5);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+  html[data-rolou="1"] .cabecalho::before {
+    opacity: 1;
+  }
+  html[data-menu="1"] .cabecalho::before {
+    opacity: 0;
+  }
+  .cabecalho {
+    color: var(--color-surface);
+    transition: color 0.4s ease;
+  }
+  html[data-rolou="1"] .cabecalho {
+    color: var(--color-ink);
+  }
+  html[data-menu="1"] .cabecalho {
+    color: var(--color-surface);
+  }
+
+  /* ---- Régua ------------------------------------------------------------
+     Escala de fita métrica em CSS puro: traço de milímetro a cada 8px, de
+     meio centímetro a cada 40px e de centímetro a cada 80px. Sem SVG
+     esticado, então nada deforma no celular. */
+  .regua-escala {
+    height: 1.25rem;
+    background-image:
+      linear-gradient(90deg, currentColor 1.5px, transparent 1.5px),
+      linear-gradient(90deg, currentColor 1px, transparent 1px),
+      linear-gradient(90deg, currentColor 1px, transparent 1px),
+      linear-gradient(currentColor, currentColor);
+    background-size:
+      80px 100%,
+      40px 62%,
+      8px 34%,
+      100% 1px;
+    background-repeat: repeat-x;
+    background-position: 0 0;
+  }
+  .regua-numeros {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 80px;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  /* Cursor de leitura: triângulo e fio laranja sobre a escala. Parado no
+     meio por padrão; com movimento, corre a régua enquanto ela cruza a tela. */
+  .regua-cursor {
+    position: absolute;
+    top: -0.55rem;
+    left: 50%;
+    width: 1px;
+    height: 2.1rem;
+    background: var(--color-madeira-clara);
+  }
+  .regua-cursor::before {
+    content: "";
+    position: absolute;
+    top: -2px;
+    left: -5px;
+    border: 5.5px solid transparent;
+    border-top: 7px solid var(--color-madeira-clara);
+  }
+
+  /* ---- WhatsApp flutuante ------------------------------------------------
+     Aparece depois que o hero sai da tela (flag data-dobra) e some com o
+     menu aberto. Verde do WhatsApp: é o ícone que todo mundo reconhece. */
+  .whats-flutuante {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(1rem) scale(0.9);
+    transition:
+      opacity 0.35s ease,
+      transform 0.45s var(--ease-oficina),
+      visibility 0s linear 0.45s;
+  }
+  html[data-dobra="1"]:not([data-menu="1"]) .whats-flutuante {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition:
+      opacity 0.35s ease,
+      transform 0.45s var(--ease-oficina),
+      visibility 0s;
+  }
+
+  dialog.galeria::backdrop {
+    background: rgb(20 14 10 / 0.94);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Movimento. Regra da casa: o estado base de toda classe animada é o estado
+   FINAL, então com movimento reduzido (ou sem suporte) tudo aparece parado e
+   no lugar.
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: no-preference) {
+  /* Entrada do hero: texto subindo em cascata e a régua se desenhando. */
+  @keyframes sobe {
+    from {
+      opacity: 0;
+      transform: translateY(1.5rem);
+    }
+  }
+  .sobe {
+    animation: sobe 0.9s var(--ease-oficina) both;
+  }
+  @keyframes hero-zoom {
+    from {
+      transform: scale(1.06);
+    }
+  }
+  .hero-zoom {
+    animation: hero-zoom 2.4s var(--ease-oficina) both;
+  }
+
+  @supports (animation-timeline: view()) {
+    /* Blocos que entram em cena ao rolar. */
+    @keyframes revela {
+      from {
+        opacity: 0;
+        transform: translateY(28px);
+      }
+    }
+    .revela {
+      animation: revela linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 22%;
+    }
+
+    @keyframes cursor-corre {
+      from {
+        left: 6%;
+      }
+      to {
+        left: 94%;
+      }
+    }
+    .regua-cursor {
+      animation: cursor-corre linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 100%;
+    }
+
+    /* Foto inteira do meio da página: parallax enquanto cruza a tela. O
+       scale cobre a folga do translate, então nunca aparece borda. */
+    @keyframes deriva-foto {
+      from {
+        transform: translate3d(0, -4%, 0) scale(1.1);
+      }
+      to {
+        transform: translate3d(0, 4%, 0) scale(1.1);
+      }
+    }
+    .deriva-foto {
+      animation: deriva-foto linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 100%;
+    }
+
+    /* Foto que se abre como cortina ao entrar em cena. */
+    @keyframes cortina {
+      from {
+        clip-path: inset(16% 0 0 0 round 1.5rem);
+        opacity: 0.3;
+      }
+    }
+    .cortina {
+      animation: cortina linear both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 38%;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

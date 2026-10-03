@@ -1,0 +1,8 @@
+   ▲ Next.js 15.5.27
+   - Local:        http://localhost:5247
+   - Network:      http://192.168.10.7:5247
+
+ ✓ Starting...
+ ✓ Ready in 2.5s
+[orcamento] {"nome":"Maria Teste","whatsapp":"(24) 99988-7766","ambiente":"Cozinha planejada","mensagem":"","em":"2026-10-03T13:15:06.107Z"}
+[orcamento] {"nome":"Maria Teste","whatsapp":"(24) 99988-7766","ambiente":"Cozinha planejada","mensagem":"","em":"2026-10-03T13:17:31.499Z"}
